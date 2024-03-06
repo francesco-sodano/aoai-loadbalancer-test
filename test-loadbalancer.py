@@ -16,7 +16,7 @@ def ask_question(question, load_balancer_url, model_name):
         api_version="2023-12-01-preview"
     )
     # Ask the question
-    response = client.chat.completions.create(
+    response = client.chat.completions.with_raw_response.create(
         model= model_name,
         messages=[
             {"role": "system", "content": "You are a helpful assistant expert in the movie called The Hitchhiker's Guide to the Galaxy, responding just with one sentence"},
@@ -24,7 +24,11 @@ def ask_question(question, load_balancer_url, model_name):
         ]
     )
     # Return the first response
-    return response.choices[0].message.content
+    region = response.headers.get("x-ms-region")
+    response = response.parse()
+    return response.choices[0].message.content, region
+    
 
 print(f"Question: {question}")
-print(f"Answer: {ask_question(question, load_balancer_url, model_name)}")
+answer, azure_region = ask_question(question, load_balancer_url, model_name)
+print(f"Answer ({azure_region}): {answer}")
