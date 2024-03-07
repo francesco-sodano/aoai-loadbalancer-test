@@ -1,4 +1,5 @@
 import threading
+from colorama import Fore, Style
 from openai import AzureOpenAI
 
 # The URL of the load balancer
@@ -8,9 +9,9 @@ model_name = "cloudcherry-gpt35t-default"
 # The default question to ask the model
 question = "What is the the meaning of life, the universe, and everything?"
 # Number of iterations
-num_iterations = 5
+num_iterations = 6
 # Number of threads
-num_threads = 5
+num_threads = 1
 
 # Function to ask a question
 def ask_question(question, load_balancer_url, model_name):
@@ -21,7 +22,7 @@ def ask_question(question, load_balancer_url, model_name):
         api_version="2023-12-01-preview"
     )
     # Ask the question
-    response = client.chat.completions.create(
+    response = client.chat.completions.with_raw_response.create(
         model= model_name,
         messages=[
             {"role": "system", "content": "You are a helpful assistant expert in the movie called The Hitchhiker's Guide to the Galaxy, responding just with one sentence"},
@@ -29,12 +30,18 @@ def ask_question(question, load_balancer_url, model_name):
         ]
     )
     
+    region = response.headers.get("x-ms-region")
+    response = response.parse()
+
     # Print the response
     print(f"Question: {question}")
-    print(f"Answer: {response.choices[0].message.content}")
+    if region != "UK South":
+        print(f"Answer ({Fore.GREEN}{region}{Style.RESET_ALL}): {response.choices[0].message.content}")
+    else:
+        print(f"Answer ({Fore.RED}{region}{Style.RESET_ALL}): {response.choices[0].message.content}")
     
     # Return the first response
-    return response.choices[0].message.content
+    return 0
 
 # prepare the itaration loop
 for i in range(num_iterations):
