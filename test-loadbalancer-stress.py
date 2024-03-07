@@ -7,7 +7,7 @@ load_balancer_url = "https://cloudcherry-openai-service.azurewebsites.net"
 # The model to use
 model_name = "cloudcherry-gpt35t-default"
 # The default question to ask the model
-question = "What is the the meaning of life, the universe, and everything?"
+question = "What I could gift to Marta for the International Women's Day?"
 # Number of iterations
 num_iterations = 6
 # Number of threads
@@ -25,7 +25,7 @@ def ask_question(question, load_balancer_url, model_name):
     response = client.chat.completions.with_raw_response.create(
         model= model_name,
         messages=[
-            {"role": "system", "content": "You are a helpful assistant expert in the movie called The Hitchhiker's Guide to the Galaxy, responding just with one sentence"},
+            {"role": "system", "content": "You are a helpful shop assistant expert women shopping, responding just with one short sentence"},
             {"role": "user", "content": question}
         ]
     )
@@ -36,9 +36,9 @@ def ask_question(question, load_balancer_url, model_name):
     # Print the response
     print(f"Question: {question}")
     if region != "UK South":
-        print(f"Answer ({Fore.GREEN}{region}{Style.RESET_ALL}): {response.choices[0].message.content}")
+        print(f"Answer ({Fore.MAGENTA}{region}{Style.RESET_ALL}): {response.choices[0].message.content}")
     else:
-        print(f"Answer ({Fore.RED}{region}{Style.RESET_ALL}): {response.choices[0].message.content}")
+        print(f"Answer ({Fore.YELLOW}{region}{Style.RESET_ALL}): {response.choices[0].message.content}")
     
     # Return the first response
     return 0

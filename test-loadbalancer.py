@@ -1,11 +1,12 @@
 from openai import AzureOpenAI
+from colorama import Fore, Style
 
 # The URL of the load balancer
 load_balancer_url = "https://cloudcherry-openai-service.azurewebsites.net"
 # The model to use
 model_name = "cloudcherry-gpt35t-default"
 # The defualt question to ask the model
-question = "What is the the meaning of life, the universe, and everything?"
+question = "What I could gift to Marta for the International Women's Day?"
 
 # Function to ask a question
 def ask_question(question, load_balancer_url, model_name):
@@ -19,7 +20,7 @@ def ask_question(question, load_balancer_url, model_name):
     response = client.chat.completions.with_raw_response.create(
         model= model_name,
         messages=[
-            {"role": "system", "content": "You are a helpful assistant expert in the movie called The Hitchhiker's Guide to the Galaxy, responding just with one sentence"},
+            {"role": "system", "content": "You are a helpful shop assistant expert women shopping, responding just with one short sentence"},
             {"role": "user", "content": question}
         ]
     )
@@ -31,4 +32,4 @@ def ask_question(question, load_balancer_url, model_name):
 
 print(f"Question: {question}")
 answer, azure_region = ask_question(question, load_balancer_url, model_name)
-print(f"Answer ({azure_region}): {answer}")
+print(f"Answer ({Fore.MAGENTA}{azure_region}{Style.RESET_ALL}): {answer}")
